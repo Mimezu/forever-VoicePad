@@ -1,0 +1,12 @@
+## Interface: 16001
+## Title: VoiceBind
+## Notes: Gamepad dictation to /say with the VoicePad Windows helper and OpenWhispr.
+## Author: Mimezu
+## Version: 0.4.0
+## SavedVariables: VoicePadDB
+## Category: Mimezu's Suite
+## Group: Mimezu_Controls
+## IconAtlas: voicechat-icon-mic
+
+Model.lua
+Core.lua

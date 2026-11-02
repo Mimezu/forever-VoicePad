@@ -1,0 +1,7 @@
+<Bindings>
+    <Binding name="VOICEPAD_START" header="VOICEPAD">VoicePad_Start()</Binding>
+    <Binding name="VOICEPAD_RECEIVE">VoicePad_Receive()</Binding>
+    <Binding name="VOICEPAD_SEND">VoicePad_Send()</Binding>
+    <Binding name="VOICEPAD_WAIT">VoicePad_Wait()</Binding>
+    <Binding name="VOICEPAD_CANCEL">VoicePad_Cancel()</Binding>
+</Bindings>
