@@ -1,4 +1,6 @@
-# VoiceBind addon 0.4.0
+# VoiceBind addon 0.4.1
+
+0.4.1: the helper key overrides are only rewritten when they differ from what is bound. Setting an override fires UPDATE_BINDINGS itself, so 0.4.0 rebound its five keys on every UPDATE_BINDINGS, which kept that event going once per frame for every addon listening to it.
 
 Use with `Utils\VoicePad\VoicePad.exe` (VoiceBind). Update/restart the companion and `/reload` WoW together.
 

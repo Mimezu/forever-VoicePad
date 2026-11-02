@@ -169,8 +169,22 @@ for index, command in ipairs(commands) do
     signal:SetScript("OnClick", function(_, _, down) if not down then action() end end)
 end
 local function SignalKey(index) return "CTRL-SHIFT-F" .. (index + 5) end
+local function SignalAction(command) return "CLICK VoicePadSignal" .. command .. ":LeftButton" end
+-- True when every free helper key already has our override and every taken key has none.
+local function BindingsInstalled()
+    for index, command in ipairs(commands) do
+        local key = SignalKey(index)
+        local existing = GetBindingAction(key)
+        local free = existing == "" or existing == "VOICEPAD_" .. command
+        if free ~= (GetBindingAction(key, true) == SignalAction(command)) then return false end
+    end
+    return true
+end
 local function InstallBindings()
     if InCombatLockdown() then return end
+    -- Setting override bindings fires UPDATE_BINDINGS itself; rebinding on every one of
+    -- those would run this every frame. Only touch the bindings when something differs.
+    if BindingsInstalled() then return end
     ClearOverrideBindings(owner)
     for index, command in ipairs(commands) do
         local key = SignalKey(index)
@@ -207,11 +221,10 @@ SlashCmdList.VOICEPAD = function(message)
         SetCVar("chatBubbles", "1")
         print("VoicePad: speech bubbles enabled for your client.")
     elseif message == "status" then
-        print("|cff66d9c6VoiceBind 0.4.0:|r phase=" .. phase .. "; editor=" .. (GetCurrentKeyBoardFocus() == edit and "focused" or "not focused"))
+        print("|cff66d9c6VoiceBind 0.4.1:|r phase=" .. phase .. "; editor=" .. (GetCurrentKeyBoardFocus() == edit and "focused" or "not focused"))
         for index, command in ipairs(commands) do
             local key = SignalKey(index)
-            local expected = "CLICK VoicePadSignal" .. command .. ":LeftButton"
-            print(key .. ": " .. (GetBindingAction(key, true) == expected and "ready" or "NOT READY"))
+            print(key .. ": " .. (GetBindingAction(key, true) == SignalAction(command) and "ready" or "NOT READY"))
         end
     elseif message == "test" then
         -- Let the slash-command chat editor finish closing before taking focus.

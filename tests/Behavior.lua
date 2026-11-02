@@ -101,9 +101,18 @@ press("CTRL-SHIFT-F9")
 check(edit:GetText() == "", "stop clears input preceding this transcript")
 press("CTRL-SHIFT-F10")
 check(not panel.shown and focus == nil, "explicit dismiss releases keyboard focus")
+-- Override bindings fire UPDATE_BINDINGS themselves: with everything in place, the event
+-- must not rebind (that would loop once per frame).
+local binds, realSetOverride = 0, SetOverrideBindingClick
+SetOverrideBindingClick = function(...) binds = binds + 1; realSetOverride(...) end
+frames.VoicePadBindingOwner.scripts.OnEvent(nil, "UPDATE_BINDINGS")
+check(binds == 0, "UPDATE_BINDINGS with the overrides in place rebinds nothing")
 savedBindings["CTRL-SHIFT-F6"] = "USER_ACTION"
 frames.VoicePadBindingOwner.scripts.OnEvent()
 check(overrides["CTRL-SHIFT-F6"] == nil, "saved key conflicts are never replaced")
+check(binds == 4, "a new conflict rebinds the other four keys once")
+frames.VoicePadBindingOwner.scripts.OnEvent(nil, "UPDATE_BINDINGS")
+check(binds == 4, "a standing conflict does not rebind again")
 savedBindings["CTRL-SHIFT-F6"] = nil
 frames.VoicePadBindingOwner.scripts.OnEvent()
 combat = true
