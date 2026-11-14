@@ -4,4 +4,5 @@
     <Binding name="VOICEPAD_SEND">VoicePad_Send()</Binding>
     <Binding name="VOICEPAD_WAIT">VoicePad_Wait()</Binding>
     <Binding name="VOICEPAD_CANCEL">VoicePad_Cancel()</Binding>
+    <Binding name="VOICEPAD_OPTIONS">VoicePadOptions_Toggle()</Binding>
 </Bindings>

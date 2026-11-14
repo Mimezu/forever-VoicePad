@@ -2,10 +2,11 @@
 ## Title: VoiceBind
 ## Notes: Gamepad dictation to /say with the VoicePad Windows helper and OpenWhispr.
 ## Author: Mimezu
-## Version: 0.4.1
+## Version: 0.5.0
 ## SavedVariables: VoicePadDB
 ## Category: Mimezu's Suite
 ## IconAtlas: voicechat-icon-mic
 
 Model.lua
 Core.lua
+Options.lua

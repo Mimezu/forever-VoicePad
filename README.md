@@ -1,4 +1,6 @@
-# VoiceBind addon 0.4.1
+# VoiceBind addon 0.5.0
+
+0.5.0: settings window (`/vp`, minimap icon, key binding, Esc > Options > AddOns > VoiceBind). Set any of the five actions to a key or controller button there; Ctrl+Shift+F6-F10 stay with the helper.
 
 0.4.1: the helper key overrides are only rewritten when they differ from what is bound. Setting an override fires UPDATE_BINDINGS itself, so 0.4.0 rebound its five keys on every UPDATE_BINDINGS, which kept that event going once per frame for every addon listening to it.
 
@@ -14,6 +16,6 @@ Use with `Utils\VoicePad\VoicePad.exe` (VoiceBind). Update/restart the companion
 - Focus loss, timeouts, rejected sends, and oversized text preserve drafts for manual review. A delayed start/commit cannot overwrite or submit a recovery draft.
 - Internal signals are **Ctrl + Shift + F6-F10**; ordinary F-keys remain unchanged and existing conflicting user bindings are preserved.
 
-Commands: `/vp test` opens a review-only test phrase; `/vp status` checks bindings; `/vp cancel` explicitly discards the draft; `/vp bubbles` enables normal game speech bubbles.
+Commands: `/vp` opens settings; `/vp help` shows setup; `/vp test` opens a review-only test phrase; `/vp status` checks bindings; `/vp cancel` explicitly discards the draft; `/vp bubbles` enables normal game speech bubbles.
 
 See `Utils\VoicePad\README.md` for full setup, recovery and architectural limits. The 0.4.0 behavior has offline regression tests, but still needs a live microphone-to-game test.

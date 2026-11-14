@@ -1,4 +1,5 @@
 local _, ns = ...
+ns.VERSION = "0.5.0"
 local phase, elapsed = "idle", 0
 local receivedInput, lastInputAt = false, 0
 local expanded, submittedText = false, nil
@@ -48,7 +49,8 @@ frame:SetScript("OnDragStart", function() if IsShiftKeyDown() then frame:StartMo
 frame:SetScript("OnDragStop", function()
     frame:StopMovingOrSizing()
     local point, _, relativePoint, x, y = frame:GetPoint()
-    VoicePadDB = { point = point, relativePoint = relativePoint, x = x, y = y }
+    if type(VoicePadDB) ~= "table" then VoicePadDB = {} end
+    VoicePadDB.point, VoicePadDB.relativePoint, VoicePadDB.x, VoicePadDB.y = point, relativePoint, x, y
 end)
 local function SetPhase(value, message)
     phase, elapsed = value, 0
@@ -154,6 +156,7 @@ BINDING_NAME_VOICEPAD_RECEIVE = "Helper: receive transcript"
 BINDING_NAME_VOICEPAD_SEND = "Helper: send transcript to /say"
 BINDING_NAME_VOICEPAD_WAIT = "Helper: wait for transcript"
 BINDING_NAME_VOICEPAD_CANCEL = "Helper: cancel"
+BINDING_NAME_VOICEPAD_OPTIONS = "Settings window"
 
 local owner = CreateFrame("Frame", "VoicePadBindingOwner")
 local commands = { "START", "RECEIVE", "SEND", "WAIT", "CANCEL" }
@@ -177,6 +180,15 @@ local function BindingsInstalled()
         local existing = GetBindingAction(key)
         local free = existing == "" or existing == "VOICEPAD_" .. command
         if free ~= (GetBindingAction(key, true) == SignalAction(command)) then return false end
+    end
+    return true
+end
+-- For the settings window: the helper keys, and whether all five are ours.
+ns.helperKeys = {}
+for index in ipairs(commands) do ns.helperKeys[SignalKey(index)] = true end
+function ns.HelperReady()
+    for index, command in ipairs(commands) do
+        if GetBindingAction(SignalKey(index), true) ~= SignalAction(command) then return false end
     end
     return true
 end
@@ -221,7 +233,7 @@ SlashCmdList.VOICEPAD = function(message)
         SetCVar("chatBubbles", "1")
         print("VoicePad: speech bubbles enabled for your client.")
     elseif message == "status" then
-        print("|cff66d9c6VoiceBind 0.4.1:|r phase=" .. phase .. "; editor=" .. (GetCurrentKeyBoardFocus() == edit and "focused" or "not focused"))
+        print("|cff66d9c6VoiceBind " .. ns.VERSION .. ":|r phase=" .. phase .. "; editor=" .. (GetCurrentKeyBoardFocus() == edit and "focused" or "not focused"))
         for index, command in ipairs(commands) do
             local key = SignalKey(index)
             print(key .. ": " .. (GetBindingAction(key, true) == SignalAction(command) and "ready" or "NOT READY"))
@@ -237,9 +249,10 @@ SlashCmdList.VOICEPAD = function(message)
             receivedInput, lastInputAt = true, GetTime()
             Review("Test draft · Enter sends; Esc closes")
         end)
+    elseif message == "" and VoicePadOptions_Toggle then VoicePadOptions_Toggle()
     else
         print("|cff66d9c6VoicePad:|r Start Utils\\VoicePad\\VoicePad.exe, then learn your controller button.")
         print("OpenWhispr: Tap mode, automatic paste ON. Keep your usual clipboard preference.")
-        print("/vp test = test draft; /vp status = check helper keys; /vp cancel = close; /vp bubbles = show speech bubbles.")
+        print("/vp = settings; /vp test = test draft; /vp status = check helper keys; /vp cancel = close; /vp bubbles = show speech bubbles.")
     end
 end
